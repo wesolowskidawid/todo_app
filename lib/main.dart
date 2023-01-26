@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Task.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,40 +31,55 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  List<String> itemList = List.of(['Example of a Task', 'Click to edit/complete']);
-  List<String> completedList = List.of(['Example of a Completed Task']);
+  List<Task> taskList = [Task('Example: Task', 0), Task('Click to remove/complete', 0), Task('Example: Completed task', 1)];
+  List<Task> sortedTaskList = [];
   final ScrollController _scrollController = ScrollController();
 
-  void addItem(String text) {
+  void updateList() {
     setState(() {
-      itemList.insert(0, text);
+      sortedTaskList.clear();
+      for(Task task in taskList) {
+        if(task.getState() == 0) {
+          sortedTaskList.add(task);
+        }
+      }
+      for(Task task in taskList) {
+        if(task.getState() == 1) {
+          sortedTaskList.add(task);
+        }
+      }
+    });
+  }
+
+  void addItem(Task task) {
+    setState(() {
+      taskList.insert(0, task);
+      updateList();
       _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
 
-  void removeItem(int id, int index) {
+  void removeItem(Task task) {
     setState(() {
-      if(id == 0) {
-        itemList.removeAt(index);
+      for(int i = 0; i < taskList.length; i++) {
+        if(taskList[i].getName() == task.getName()) {
+          taskList.removeAt(i);
+        }
       }
-      else if(id == 1) {
-        completedList.removeAt(index);
-      }
+      updateList();
       // _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
 
-  void completedTask(int index) {
+  void changeState(Task task) {
     setState(() {
-      completedList.insert(0, itemList[index]);
-      itemList.removeAt(index);
-      // _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    });
-  }
-  void uncompletedTask(int index) {
-    setState(() {
-      itemList.insert(0, completedList[index]);
-      completedList.removeAt(index);
+      if(task.getState() == 0) {
+        task.setState(1);
+      }
+      else {
+        task.setState(0);
+      }
+      updateList();
       // _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
@@ -93,8 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
             FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                addItem(inputValue);
+                addItem(Task(inputValue, 0));
                 // TODO check if task != null
+                // TODO tasks cant have the same name
               },
               child: const Text('OK'),
             ),
@@ -104,14 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void showEditAlert(int id, int index) {
-    String taskName, compl;
-    if(id == 0) {
-      taskName = itemList[index];
+  void showEditAlert(Task task) {
+    String taskName = task.getName();
+    String compl;
+    if(task.getState() == 0) {
       compl = 'Completed';
     }
     else {
-      taskName = completedList[index];
       compl = 'Uncompleted';
     }
     showDialog(
@@ -119,10 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              'Edit task no. $index',
-            ),
-            content: Text(
-              'Title: $taskName',
+              'Edit task \"$taskName\"',
             ),
             actions: <Widget>[
               FlatButton(
@@ -134,19 +147,14 @@ class _MyHomePageState extends State<MyHomePage> {
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  removeItem(id, index);
+                  removeItem(task);
                 },
                 child: const Text('Remove'),
               ),
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  if(id == 0) {
-                    completedTask(index);
-                  }
-                  else if(id == 1) {
-                    uncompletedTask(index);
-                  }
+                  changeState(task);
                 },
                 child: Text(compl),
               ),
@@ -159,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    updateList();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title,
@@ -183,51 +192,51 @@ class _MyHomePageState extends State<MyHomePage> {
           color: const Color(0xff393e46),
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: itemList.length + completedList.length,
-            itemBuilder: (context, index) {
-              if(index < itemList.length) {
-                String temp = itemList[index];
+            itemCount: sortedTaskList.length,
+            itemBuilder: (BuildContext context, int index) {
+              Task task = sortedTaskList[index];
+              String taskName = task.getName();
+              if(task.state == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
                     onTap: () {
-                      showEditAlert(0, index);
+                      showEditAlert(task);
                     },
                     child: Text(
-                      '• $temp',
+                      '• $taskName',
                       style: const TextStyle(
-                        fontSize: 20.0,
-                        color: Color(0xff00adb5)
+                          fontSize: 20.0,
+                          color: Color(0xff00adb5)
                       ),
                     ),
                   ),
                 );
               }
               else {
-                String temp = completedList[index-itemList.length];
                 return Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
                     onTap: () {
-                      showEditAlert(1, index-itemList.length);
+                      showEditAlert(task);
                     },
                     child: RichText(
                       text: TextSpan(
                         text: '• ',
                         style: const TextStyle(
                           fontSize: 20.0,
-                          color: Color(0xff00adb5),
+                          color: Color(0xff00adb5)
                         ),
                         children: [
                           TextSpan(
-                            text: temp,
+                            text: taskName,
                             style: const TextStyle(
                               fontSize: 20.0,
+                              color: Color(0xff00adb5),
                               decoration: TextDecoration.lineThrough,
                               fontStyle: FontStyle.italic,
-                              color: Color(0xff00adb5),
                             ),
-                          )
+                          ),
                         ]
                       ),
                     ),
