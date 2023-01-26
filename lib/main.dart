@@ -92,20 +92,33 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         if(error == "") {
           return AlertDialog(
+            backgroundColor: const Color(0xff222831),
             title: const Text(
               'Add a new task',
+              style: TextStyle(
+                color: Color(0xff00adb5),
+              ),
             ),
             content: TextField(
               onChanged: (value) {
                 inputValue = value;
               },
+              decoration: const InputDecoration(hintText: 'Enter task name', hintStyle: TextStyle(color: Color(0xff00757a))),
+              style: const TextStyle(
+                color: Color(0xff00adb5),
+              ),
             ),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel'),
+                child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
               FlatButton(
                 onPressed: () {
@@ -133,15 +146,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                   }
                 },
-                child: const Text('OK'),
+                child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
             ],
           );
         }
         else {
           return AlertDialog(
+            backgroundColor: const Color(0xff222831),
             title: const Text(
               'Add a new task',
+              style: TextStyle(
+                color: Color(0xff00adb5),
+              ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -150,7 +172,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   onChanged: (value) {
                     inputValue = value;
                   },
-                  decoration: const InputDecoration(hintText: 'Enter task name'),
+                  decoration: const InputDecoration(hintText: 'Enter task name', hintStyle: TextStyle(color: Color(0xff00757a))),
+                  style: const TextStyle(
+                    color: Color(0xff00adb5),
+                  ),
                 ),
                 const SizedBox(height: 16,),
                 Text(
@@ -166,7 +191,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel'),
+                child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
               FlatButton(
                 onPressed: () {
@@ -194,7 +224,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                   }
                 },
-                child: const Text('OK'),
+                child: const Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
             ],
           );
