@@ -30,23 +30,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  List<String> itemList = List.generate(100, (i) => "ex $i");
-  List<String> completedList = List.of(['Example of Completed Task']);
+  List<String> itemList = List.of(['Example of a Task', 'Click to edit/complete']);
+  List<String> completedList = List.of(['Example of a Completed Task']);
   final ScrollController _scrollController = ScrollController();
 
   void addItem(String text) {
     setState(() {
       itemList.insert(0, text);
       _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-      print('Item Added');
     });
   }
 
-  void removeItem(int index) {
+  void removeItem(int id, int index) {
     setState(() {
+      if(id == 0) {
+        itemList.removeAt(index);
+      }
+      else if(id == 1) {
+        completedList.removeAt(index);
+      }
+      // _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    });
+  }
+
+  void completedTask(int index) {
+    setState(() {
+      completedList.insert(0, itemList[index]);
       itemList.removeAt(index);
-      _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-      print('Item no. $index removed');
+      // _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    });
+  }
+  void uncompletedTask(int index) {
+    setState(() {
+      itemList.insert(0, completedList[index]);
+      completedList.removeAt(index);
+      // _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     });
   }
 
@@ -86,8 +104,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void showEditAlert(int index) {
-    String taskName = itemList[index];
+  void showEditAlert(int id, int index) {
+    String taskName, compl;
+    if(id == 0) {
+      taskName = itemList[index];
+      compl = 'Completed';
+    }
+    else {
+      taskName = completedList[index];
+      compl = 'Uncompleted';
+    }
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -108,15 +134,21 @@ class _MyHomePageState extends State<MyHomePage> {
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  removeItem(index);
+                  removeItem(id, index);
                 },
                 child: const Text('Remove'),
               ),
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+                  if(id == 0) {
+                    completedTask(index);
+                  }
+                  else if(id == 1) {
+                    uncompletedTask(index);
+                  }
                 },
-                child: const Text('Complete'),
+                child: Text(compl),
               ),
             ],
           );
@@ -150,22 +182,44 @@ class _MyHomePageState extends State<MyHomePage> {
         child:
           ListView.builder(
             controller: _scrollController,
-            itemCount: itemList.length,
+            itemCount: itemList.length + completedList.length,
             itemBuilder: (context, index) {
-              return Padding(
+              if(index < itemList.length) {
+                String temp = itemList[index];
+                return Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
                     onTap: () {
-                      showEditAlert(index);
+                      showEditAlert(0, index);
                     },
                     child: Text(
-                        itemList[index],
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                        ),
+                      '• $temp',
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                      ),
                     ),
                   ),
-              );
+                );
+              }
+              else {
+                String temp = itemList[index-itemList.length];
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: InkWell(
+                    onTap: () {
+                      showEditAlert(1, index-itemList.length);
+                    },
+                    child: Text(
+                      '• $temp',
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        decoration: TextDecoration.lineThrough,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                );
+              }
             },
         )
 
