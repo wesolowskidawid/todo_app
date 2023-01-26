@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }
               else {
-                String temp = itemList[index-itemList.length];
+                String temp = completedList[index-itemList.length];
                 return Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
