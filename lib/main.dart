@@ -84,39 +84,121 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void showAddAlert() {
+  void showAddAlert(String error) {
     String inputValue = "";
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Add a new task',
-          ),
-          content: TextField(
-            onChanged: (value) {
-              inputValue = value;
-            },
-          ),
-          actions: <Widget>[
-            FlatButton(
+        if(error == "") {
+          return AlertDialog(
+            title: const Text(
+              'Add a new task',
+            ),
+            content: TextField(
+              onChanged: (value) {
+                inputValue = value;
+              },
+            ),
+            actions: <Widget>[
+              FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 child: const Text('Cancel'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  bool repeatedError = false;
+                  bool emptyError = false;
+                  for(Task task in taskList) {
+                    if(task.getName() == inputValue) {
+                      repeatedError = true;
+                      break;
+                    }
+                  }
+                  if(inputValue == "") {
+                    emptyError = true;
+                  }
+                  if(!repeatedError && !emptyError) {
+                    addItem(Task(inputValue, 0));
+                  }
+                  else {
+                    if(emptyError) {
+                      showAddAlert("Please put a task name");
+                    }
+                    else if(repeatedError) {
+                      showAddAlert("There is a task with this name");
+                    }
+                  }
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        }
+        else {
+          return AlertDialog(
+            title: const Text(
+              'Add a new task',
             ),
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                addItem(Task(inputValue, 0));
-                // TODO check if task != null
-                // TODO tasks cant have the same name
-              },
-              child: const Text('OK'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    inputValue = value;
+                  },
+                  decoration: const InputDecoration(hintText: 'Enter task name'),
+                ),
+                const SizedBox(height: 16,),
+                Text(
+                    'Error: $error',
+                    style: const TextStyle(
+                      color: Colors.red,
+                    ),
+                ),
+              ],
             ),
-          ],
-        );
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  bool repeatedError = false;
+                  bool emptyError = false;
+                  for(Task task in taskList) {
+                    if(task.getName() == inputValue) {
+                      repeatedError = true;
+                      break;
+                    }
+                  }
+                  if(inputValue == "") {
+                    emptyError = true;
+                  }
+                  if(!repeatedError && !emptyError) {
+                    addItem(Task(inputValue, 0));
+                  }
+                  else {
+                    if(emptyError) {
+                      showAddAlert("Please put a task name");
+                    }
+                    else if(repeatedError) {
+                      showAddAlert("There is a task with this name");
+                    }
+                  }
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        }
       }
     );
   }
@@ -134,29 +216,54 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              'Edit task \"$taskName\"',
+            backgroundColor: const Color(0xff222831),
+            title: const Text(
+              'Edit task',
+              style: TextStyle(
+                color: Color(0xff00adb5),
+              ),
+            ),
+            content: Text(
+              'Task name: "$taskName"',
+              style: const TextStyle(
+                color: Color(0xff00adb5),
+              ),
             ),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel'),
+                child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   removeItem(task);
                 },
-                child: const Text('Remove'),
+                child: const Text(
+                    'Remove',
+                    style: TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   changeState(task);
                 },
-                child: Text(compl),
+                child: Text(
+                    compl,
+                    style: const TextStyle(
+                      color: Color(0xff00adb5),
+                    ),
+                ),
               ),
             ],
           );
@@ -182,7 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Color(0xff00adb5)
             ),
             onPressed: () {
-              showAddAlert();
+              showAddAlert("");
             },
           ),
         ],
