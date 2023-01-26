@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        fontFamily: 'Arial',
       ),
       home: const MyHomePage(title: 'TaskMaster'),
     );
@@ -162,15 +162,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title,
-          style: const TextStyle(color: Colors.black,
+          style: const TextStyle(color: Color(0xff00adb5),
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff222831),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
               Icons.add,
-              color: Colors.black
+              color: Color(0xff00adb5)
             ),
             onPressed: () {
               showAddAlert();
@@ -179,8 +179,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child:
-          ListView.builder(
+        child: Container(
+          color: const Color(0xff393e46),
+          child: ListView.builder(
             controller: _scrollController,
             itemCount: itemList.length + completedList.length,
             itemBuilder: (context, index) {
@@ -195,7 +196,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       '• $temp',
                       style: const TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 20.0,
+                        color: Color(0xff00adb5)
                       ),
                     ),
                   ),
@@ -209,20 +211,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       showEditAlert(1, index-itemList.length);
                     },
-                    child: Text(
-                      '• $temp',
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        decoration: TextDecoration.lineThrough,
-                        fontStyle: FontStyle.italic,
+                    child: RichText(
+                      text: TextSpan(
+                        text: '• ',
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Color(0xff00adb5),
+                        ),
+                        children: [
+                          TextSpan(
+                            text: temp,
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                              decoration: TextDecoration.lineThrough,
+                              fontStyle: FontStyle.italic,
+                              color: Color(0xff00adb5),
+                            ),
+                          )
+                        ]
                       ),
                     ),
                   ),
                 );
               }
             },
-        )
-
+          ),
+        ),
       ),
     );
   }
