@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   List<String> itemList = List.generate(100, (i) => "ex $i");
+  List<String> completedList = List.of(['Example of Completed Task']);
   final ScrollController _scrollController = ScrollController();
 
   void addItem(String text) {
@@ -38,6 +39,14 @@ class _MyHomePageState extends State<MyHomePage> {
       itemList.insert(0, text);
       _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
       print('Item Added');
+    });
+  }
+
+  void removeItem(int index) {
+    setState(() {
+      itemList.removeAt(index);
+      _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+      print('Item no. $index removed');
     });
   }
 
@@ -77,6 +86,44 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void showEditAlert(int index) {
+    String taskName = itemList[index];
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Edit task no. $index',
+            ),
+            content: Text(
+              'Title: $taskName',
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  removeItem(index);
+                },
+                child: const Text('Remove'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Complete'),
+              ),
+            ],
+          );
+        }
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
                     onTap: () {
-                      print('Item ${index + 1} tapped!');
+                      showEditAlert(index);
                     },
                     child: Text(
                         itemList[index],
