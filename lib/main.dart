@@ -109,10 +109,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: const Text(
                     'Cancel',
                     style: TextStyle(
@@ -120,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   bool repeatedError = false;
@@ -146,6 +149,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                   }
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: const Text(
                     'OK',
                     style: TextStyle(
@@ -187,10 +193,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: const Text(
                     'Cancel',
                     style: TextStyle(
@@ -198,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   bool repeatedError = false;
@@ -224,6 +233,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                   }
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: const Text(
                     'OK',
                     style: TextStyle(
@@ -265,10 +277,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: const Text(
                     'Cancel',
                     style: TextStyle(
@@ -276,11 +291,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   removeItem(task);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: const Text(
                     'Remove',
                     style: TextStyle(
@@ -288,11 +306,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   changeState(task);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff393e46),
+                ),
                 child: Text(
                     compl,
                     style: const TextStyle(
